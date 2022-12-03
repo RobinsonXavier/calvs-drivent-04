@@ -5,6 +5,7 @@ async function findBooking(roomId: number) {
     where: {
       roomId
     }
+    
   });
 }
 

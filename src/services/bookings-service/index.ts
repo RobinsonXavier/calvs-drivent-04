@@ -48,7 +48,7 @@ async function postBooking(userId: number, roomId: number) {
   if (!checkRoom) {
     throw notFoundError();
   }
-
+ 
   const allRoomBookings = await bookingRepository.listAllChosenBookings(roomId);
 
   if (checkRoom.capacity === allRoomBookings.length || checkRoom.capacity < allRoomBookings.length ) {

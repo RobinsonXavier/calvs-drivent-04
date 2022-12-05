@@ -30,13 +30,13 @@ async function postBooking(userId: number, roomId: number) {
   const checkEnrollment = await enrollmentRepository.findWithAddressByUserId(userId);
 
   if (!checkEnrollment) {
-    throw notFoundError();
+    throw requestError(403, "FORBIDDEN");
   }
 
   const checkTicket = await ticketRepository.findTicketByEnrollmentId(checkEnrollment.id);
 
   if (!checkTicket || checkTicket.status !== "PAID") {
-    throw notFoundError();
+    throw requestError(403, "FORBIDDEN");
   }
 
   const checkRoom = await bookingRepository.findRoomById(roomId);
@@ -56,9 +56,28 @@ async function postBooking(userId: number, roomId: number) {
   return result.id;
 }
 
+async function updateBooking(bookingId: number, roomId: number) {
+  const checkRoom = await bookingRepository.findRoomById(roomId);
+
+  if (!checkRoom) {
+    throw notFoundError();
+  }
+
+  const allRoomBookings = await bookingRepository.listAllChosenBookings(roomId);
+
+  if (checkRoom.capacity <= allRoomBookings.length) {
+    throw requestError(403, "FORBIDDEN");
+  }
+
+  const result = await bookingRepository.updateBookingByRoomId(bookingId, roomId);
+
+  return result.id;
+}
+
 const bookingService = {
   getBooking,
-  postBooking
+  postBooking,
+  updateBooking
 };
 
 export default bookingService;

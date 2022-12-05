@@ -57,7 +57,7 @@ const bookingRepository = {
   createBooking,
   updateBookingByRoomId,
   findRoomById,
-  listAllChosenBookings
+  listAllChosenBookings,
 };
 
 export default bookingRepository;

@@ -51,13 +51,13 @@ async function postBooking(userId: number, roomId: number) {
 
   const allRoomBookings = await bookingRepository.listAllChosenBookings(roomId);
 
-  if (checkRoom.capacity <= allRoomBookings.length) {
+  if (checkRoom.capacity === allRoomBookings.length || checkRoom.capacity < allRoomBookings.length ) {
     throw requestError(403, "FORBIDDEN");
   }
 
   const result = await bookingRepository.createBooking(userId, roomId);
 
-  return result.id;
+  return { bookingId: result.id };
 }
 
 async function updateBooking(bookingId: number, roomId: number) {
@@ -69,13 +69,13 @@ async function updateBooking(bookingId: number, roomId: number) {
 
   const allRoomBookings = await bookingRepository.listAllChosenBookings(roomId);
 
-  if (checkRoom.capacity <= allRoomBookings.length) {
+  if (checkRoom.capacity === allRoomBookings.length || checkRoom.capacity < allRoomBookings.length ) {
     throw requestError(403, "FORBIDDEN");
   }
 
   const result = await bookingRepository.updateBookingByRoomId(bookingId, roomId);
 
-  return result.id;
+  return { bookingId: result.id };
 }
 
 const bookingService = {

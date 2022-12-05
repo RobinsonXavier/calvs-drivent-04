@@ -20,3 +20,13 @@ export async function createRoomWithHotelId(hotelId: number) {
     }
   });
 }
+
+export async function createRoomWithHotelIdLowCapacity(hotelId: number) {
+  return prisma.room.create({
+    data: {
+      name: "1030",
+      capacity: 1,
+      hotelId: hotelId,
+    }
+  });
+}

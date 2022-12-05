@@ -12,11 +12,15 @@ async function getBooking(userId: number) {
 
   const checkTicket = await ticketRepository.findTicketByEnrollmentId(checkEnrollment.id);
 
-  if (!checkTicket || checkTicket.status !== "PAID") {
+  if (!checkTicket || checkTicket.status !== "PAID" || checkTicket.TicketType.isRemote || !checkTicket.TicketType.includesHotel) {
     throw notFoundError();
   }
 
   const result = await bookingRepository.findBookingByUserId(userId);
+
+  if (!result) {
+    throw notFoundError();
+  }
 
   const finalResult = {
     id: result.id,
@@ -35,7 +39,7 @@ async function postBooking(userId: number, roomId: number) {
 
   const checkTicket = await ticketRepository.findTicketByEnrollmentId(checkEnrollment.id);
 
-  if (!checkTicket || checkTicket.status !== "PAID") {
+  if (!checkTicket || checkTicket.status !== "PAID" || checkTicket.TicketType.isRemote || !checkTicket.TicketType.includesHotel) {
     throw requestError(403, "FORBIDDEN");
   }
 
